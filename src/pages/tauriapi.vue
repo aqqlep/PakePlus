@@ -182,7 +182,10 @@
                 <!-- api/template -->
                 <div v-if="menuIndex === '0-1'" class="cardContent">
                     <h1 class="cardTitle">my info</h1>
-                    <p>Get Github information.</p>
+                    <p>
+                        Get Github information.（id:
+                        {{ creatDeviceid() }}）
+                    </p>
                     <div class="cardBox">
                         <el-tooltip
                             content="Github discount amount"
@@ -980,6 +983,24 @@
                         <el-tooltip content="auto operation" placement="bottom">
                             <el-button>{{ t('autoOperation') }}</el-button>
                         </el-tooltip>
+                        <el-tooltip
+                            content="disable right click"
+                            placement="bottom"
+                        >
+                            <el-button>全局禁止右键</el-button>
+                        </el-tooltip>
+                        <el-tooltip
+                            content="allow some right click"
+                            placement="bottom"
+                        >
+                            <el-button>允许部分右键</el-button>
+                        </el-tooltip>
+                        <el-tooltip
+                            content="enable right click"
+                            placement="bottom"
+                        >
+                            <el-button>允许右键</el-button>
+                        </el-tooltip>
                     </div>
                     <div class="codeDemo">
                         <h2>{{ t('removeWebElement') }}</h2>
@@ -1040,12 +1061,12 @@
                     <div class="cardBox">
                         <el-tooltip content="open debug" placement="bottom">
                             <el-button @click="debugHandler('open')">
-                                开启调试
+                                {{ t('openDebug') }}
                             </el-button>
                         </el-tooltip>
                         <el-tooltip content="close debug" placement="bottom">
                             <el-button @click="debugHandler('close')">
-                                关闭调试
+                                {{ t('closeDebug') }}
                             </el-button>
                         </el-tooltip>
                     </div>
@@ -1160,6 +1181,7 @@ import {
     yunPaySignKey,
     zPayMchId,
     zPaySignKey,
+    creatDeviceid,
 } from '@/utils/common'
 import About from '@/pages/about.vue'
 import {
@@ -1651,18 +1673,18 @@ const getZPayCode = async (payMathod: string = 'alipay') => {
     order.sign = getPaySign(order, zPaySignKey)
     console.log('order----', order)
     // formData post
-    // const formData = new FormData()
-    // formData.append('pid', zPayMchId)
-    // formData.append('type', payMathod)
-    // formData.append('out_trade_no', payOrderNo.value)
-    // formData.append('notify_url', 'https://juejin.cn/')
-    // formData.append('name', 'VIP会员')
-    // formData.append('money', money.toString())
-    // formData.append('clientip', '192.168.1.100')
-    // formData.append('sign_type', 'MD5')
-    // formData.append('sign', getPaySign(formData, zPaySignKey))
-    // const response: any = await payApi.getZPayCode2(formData)
-    const response: any = await payApi.getZPayCode(order)
+    const formData = new FormData()
+    formData.append('pid', zPayMchId)
+    formData.append('type', payMathod)
+    formData.append('out_trade_no', payOrderNo.value)
+    formData.append('notify_url', 'https://juejin.cn/')
+    formData.append('name', 'VIP会员')
+    formData.append('money', money.toString())
+    formData.append('clientip', '192.168.1.100')
+    formData.append('sign_type', 'MD5')
+    formData.append('sign', getPaySign(formData, zPaySignKey))
+    const response: any = await payApi.getZPayCode2(formData)
+    // const response: any = await payApi.getZPayCode(order)
     console.log('response----', response)
     if (response.status === 200 && response.data.code === 1) {
         dialogVisible.value = true
